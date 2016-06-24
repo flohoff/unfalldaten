@@ -4,6 +4,13 @@ var data=
 { lat: 51.9107, lon: 8.38387, street: 'Berliner Straße', type: 581 },
 { lat: 51.911, lon: 8.385, street: 'Berliner Straße', type: 799 },
 { lat: 51.9101, lon: 8.38167, street: 'Beriner Straße', type: 141 },
+
+{ lat: 51.9129, lon: 8.3791, street: 'Friedrich-Ebert-Straße', type: 141 },
+{ lat: 51.9124, lon: 8.37919, street: 'Friedrich-Ebert-Straße', type: 799 },
+{ lat: 51.9116, lon: 8.37972, street: 'Friedrich-Ebert-Straße', type: 181 },
+{ lat: 51.9105, lon: 8.3804, street: 'Friedrich-Ebert-Straße', type: 371},
+{ lat: 51.9097, lon: 8.38117, street: 'Friedrich-Ebert-Straße', type: 222},
+
 ];
 
 /*
