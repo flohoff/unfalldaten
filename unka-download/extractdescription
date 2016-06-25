@@ -21,12 +21,20 @@ foreach my $fname (@ARGV) {
 	# div id="unka-detailboxright"
 	my $n=$tree->findvalue('/html/body//div[@id="unka-detailboxright"]');
 	my @a = split(/.rtlichkeit . Verkehrsvorgang:|Beschreibung:\s*|Kommentar:\s*|Stichpunkte|Kategorie/, $n);
-	my @r=map { s/^\s+//; $_;} @a;
+	my @r=map { s/^\s+//; s/\-{2,}//; $_;} @a;
 
-	#printf("%d;%s;%s;%s\n",
-	#	$num, $r[1], $r[2], $r[3]);
+	my $l;
+	if ($r[1] ne '') {
+		$l->{ort}=$r[1];
+	}
+	if ($r[2] ne '') {
+		$l->{beschreibung}=$r[2];
+	}
+	if ($r[3] ne '') {
+		$l->{kommentar}=$r[3];
+	}
 
-	$result->{$num}={ ort => $r[1], beschreibung => $r[2], kommentar => $r[3] };		
+	$result->{$num}=$l;
 }
 
 print "var unfalltypen=" . to_json( $result, { ascii => 0, pretty => 0 } );
