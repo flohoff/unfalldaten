@@ -39,6 +39,10 @@ cat unfalltypen-liste.txt | while read NO; do
 	# unkatyp_onclick(4, 'ut4', '4')
  	utype=$(sed -ne '/unkatyp_onclick/ { s/^.*unkatyp_onclick.//; s/,.*$//; p }' <${TMP})
 
+	if [ -z "${utype}" ]; then
+		continue
+	fi
+
 	curl -q "http://udv.de/unka/unka/unka_detail.php?unka_nr=${utype}&keyword=linein" \
 		-H 'Accept: */*' \
 		-H 'Accept-Encoding: gzip, deflate' \
@@ -52,8 +56,8 @@ cat unfalltypen-liste.txt | while read NO; do
 		-H 'X-Requested-With: XMLHttpRequest' \
 		> description/${NO}-${utype}.html
 
- 	echo ${path}
- 	curl -q http://udv.de/unka/${path} \
+ 	echo ${imgpath}
+ 	curl -q http://udv.de/unka/${imgpath} \
  		>images/${NO}.png
  
 	sleep 1
