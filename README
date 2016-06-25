@@ -1,10 +1,5 @@
 Um Boundarys zu exportieren aus OSM:
 
-Entsprechende Ebene auswählen und dann als json runterladen.
-Raus kommt ein ZIP file:
-
-https://osm.wno-edv-service.de/boundaries/
-
 
 Bilderdienst im Internet:
 
@@ -53,4 +48,38 @@ http://www.mapillary.com
 	      "lv" : "0",
 	[ .... ]
 
+
+
+Andere Städte
+
+1. Boundary downloaden
+
+	Entsprechende Ebene auswählen und dann als json runterladen.
+	Raus kommt ein ZIP file:
+
+	https://osm.wno-edv-service.de/boundaries/
+
+2. Das boundary geojson in das Verzeichniss legen.
+
+
+3. Name der geojso datei in "index.html" aendern:
+
+ 63 
+ 64 
+ 65     var boundary = L.geoJson.ajax("boundary_guetersloh.geojson",
+ 66         {
+ 67           style: {
+ 68               "color": "#ff0080",
+
+4. Startpunkt der Karte beim Laden ändern:
+
+ 49 
+ 50     var map=L.map('mapid').setView([51.902578, 8.385411], 12);
+ 51 
+
+
 Florian Lohoff <f@zz.de>
+
+
+
+
