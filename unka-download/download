@@ -1,6 +1,11 @@
 #!/bin/bash
 
+[ -d images ] || mkdir images
+[ -d description ] || mkdir description
+
 cat unfalltypen-liste.txt | while read NO; do
+
+	TMP=`tempfile`
 
 	curl -q 'http://udv.de/unka/unka.php' \
 		-H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' \
@@ -13,11 +18,9 @@ cat unfalltypen-liste.txt | while read NO; do
 		-H 'Referer: http://udv.de/unka/unka.php' \
 		-H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0' \
 		-H 'Content-Type: application/x-www-form-urlencoded' \
-		--data "unka-inputfilternummer=${NO}&submit_name1=Suchen&unka-anzzeilen1=1&unka-historyclick1=0" >/dev/null
+		--data "unka-inputfilternummer=${NO}&submit_name1=Suchen&unka-anzzeilen1=1&unka-historyclick1=0" >${TMP}
 
 	sleep 0.4
-
-	TMP=`tempfile`
 
 	curl -q 'http://udv.de/unka/unka/unka_suche.php?keyword=linein' \
 		-H 'Accept: */*' \
@@ -31,11 +34,27 @@ cat unfalltypen-liste.txt | while read NO; do
 		-H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0' \
 		-H 'X-Requested-With: XMLHttpRequest'  >${TMP}
 
-	# <img src="images/unfalltypen/small/70.png" width="90" height="130" alt="" />
-	path=$(sed -ne '/img src/ { s/^.*img src..//; s/. width=.*$//; p }' <${TMP})
-	echo ${path}
-	curl -q http://udv.de/unka/${path} \
-		>images/${NO}.png
+ 	# <img src="images/unfalltypen/small/70.png" width="90" height="130" alt="" />
+ 	imgpath=$(sed -ne '/img src/ { s/^.*img src..//; s/. width=.*$//; p }' <${TMP})
+	# unkatyp_onclick(4, 'ut4', '4')
+ 	utype=$(sed -ne '/unkatyp_onclick/ { s/^.*unkatyp_onclick.//; s/,.*$//; p }' <${TMP})
 
+	curl -q "http://udv.de/unka/unka/unka_detail.php?unka_nr=${utype}&keyword=linein" \
+		-H 'Accept: */*' \
+		-H 'Accept-Encoding: gzip, deflate' \
+		-H 'Accept-Language: de-DE,en;q=0.7,en-US;q=0.3' \
+		-H 'Connection: keep-alive' \
+		-H 'Cookie: PHPSESSID=oguvoqob8i55cdelkeofclv67q4lfd7ntiek5k86k9nk0u3q2es0; has_js=1; cookie-agreed=2' \
+		-H 'DNT: 1' \
+		-H 'Host: udv.de' \
+		-H 'Referer: http://udv.de/unka/unka.php' \
+		-H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0' \
+		-H 'X-Requested-With: XMLHttpRequest' \
+		> description/${NO}-${utype}.html
+
+ 	echo ${path}
+ 	curl -q http://udv.de/unka/${path} \
+ 		>images/${NO}.png
+ 
 	sleep 1
 done
