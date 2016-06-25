@@ -129,6 +129,19 @@
 				p=p + "<br>" + d.lv + " Leichtverletzte(r)";
 			}
 
+			/* Verursacher */
+			var v=d.vb01;
+			var vs="Sonstige";
+			if (d.vb01 < 71) {
+				vs="KFZ";
+			} else if (v == 71 || v == 72) {
+				vs="Fahrrad";
+			} else if (v == 81) {
+				vs="Fußgänger";
+			}
+
+			p=p + "<br><br>Hauptverursacher: " + vs;
+
 			m.bindPopup(p)
 
 			markers.addLayer(m);
