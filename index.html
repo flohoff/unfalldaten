@@ -71,9 +71,8 @@
 				});
 		map.addLayer(boundary);
 
-		L.control.layers({ "OpenStreetmap": colourlayer, "Greyscale": bwlayer}, { "Stadtgrenze": boundary }).addTo(map);
-
-		var markers = L.markerClusterGroup();
+		var cluster = L.markerClusterGroup();
+		var marker = L.layerGroup();
 
 		for(var i in data) {
 			var d=data[i];
@@ -153,10 +152,13 @@
 
 			m.bindPopup(p)
 
-			markers.addLayer(m);
+			cluster.addLayer(m);
+			marker.addLayer(m);
 		}
-	
-		map.addLayer(markers);
+		map.addLayer(cluster);
+
+		L.control.layers({ "OpenStreetmap": colourlayer, "Greyscale": bwlayer}, { "Cluster": cluster, "Marker": marker, "Stadtgrenze": boundary }).addTo(map);
+
 	</script>
 </body>
 </html>
