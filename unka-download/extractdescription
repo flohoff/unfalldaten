@@ -1,0 +1,32 @@
+#!/usr/bin/perl -w
+
+use strict;
+use Data::Dumper;
+use utf8;
+use HTML::TreeBuilder::XPath;
+use open IO => ":encoding(utf-8)";
+use open ':std';
+use JSON;
+
+my $result;
+
+foreach my $fname (@ARGV) {
+	#print "fname $fname\n";
+	my $num=$fname;
+	$num =~ s/^description.|\-.*$//g;
+
+	my $tree = HTML::TreeBuilder::XPath->new; # empty tree
+	$tree->parse_file($fname);
+
+	# div id="unka-detailboxright"
+	my $n=$tree->findvalue('/html/body//div[@id="unka-detailboxright"]');
+	my @a = split(/.rtlichkeit . Verkehrsvorgang:|Beschreibung:\s*|Kommentar:\s*|Stichpunkte|Kategorie/, $n);
+	my @r=map { s/^\s+//; $_;} @a;
+
+	#printf("%d;%s;%s;%s\n",
+	#	$num, $r[1], $r[2], $r[3]);
+
+	$result->{$num}={ ort => $r[1], beschreibung => $r[2], kommentar => $r[3] };		
+}
+
+print "var unfalltypen=" . to_json( $result, { ascii => 0, pretty => 0 } );
