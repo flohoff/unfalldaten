@@ -1,2 +1,5 @@
 
 - UNKA Typ 122 - Parsing der description kaputt
+- Wenn man raus zoomed fehlt ein Unfall 259 statt 260 
+  Evtl nur ein Bug im MarkerCluster
+  Es werden alle Unfaelle hinzugefügt
