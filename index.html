@@ -86,8 +86,6 @@
 			}
 			var type=typ + utyp;
 
-			var t="Title " + type;
-
 			var icon=bluemarker;
 			if (d.gt != 0) {
 				icon=deadmarker;
@@ -98,7 +96,7 @@
 			}
 
 			var m=L.marker(new L.LatLng(data[i].geoy, data[i].geox),
-					{ icon: icon, title: t });
+					{ icon: icon, title: i });
 
 			/* Create unfalltype image link */
 			var timage="<img src=\"images/unka/" + type + ".png\">";
