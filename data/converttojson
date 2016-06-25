@@ -1,0 +1,30 @@
+#!/usr/bin/perl -w
+
+use strict;
+use Data::Dumper;
+use List::MoreUtils qw/each_array/;
+use open IO => ":encoding(utf-8)";
+use open ':std';
+use utf8;
+use JSON;
+
+my $line=<STDIN>;
+chomp($line);
+my @head=map { $_=lc($_); s/ß/ss/; s/[^a-z0-9]//g; $_; } split(/,/, $line);
+
+my @result;
+while(<STDIN>) {
+	chomp();
+	my @elem=split(/,/, $_);
+
+	my $l;
+	my $ea = each_array(@head, @elem);
+	while (my ($hi, $ei) = $ea->()) {
+		next if (!defined($ei));
+		$l->{$hi}=$ei;
+	}
+
+	push @result, $l;
+}
+
+print to_json( \@result, { ascii => 0, pretty => 0 } );
