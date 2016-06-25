@@ -17,11 +17,13 @@
 	<script src="leaflet.awesome-markers.min.js"></script>
 	<script src="leaflet.ajax.min.js"></script>
 	<script src="data.js"></script>
+	<script src="unfalltypen.js"></script>
 	<style>
 		body { padding: 0; margin 0; }
 		html, body, #mapid { height: 100%;, width: 100%; }
 	</style>
 </head>
+
 <body>
 	<div id="mapid"</div>
 	<script>
@@ -98,9 +100,23 @@
 					ort=ort + " / " + d.strasse2;
 			}
 
+			var ut=unfalltypen[type];
+			var uts="";
+			if (ut) {
+				if (ut.beschreibung) {
+					uts=uts+"<br>Beschreibung: " + ut.beschreibung;
+				}
+				if (ut.ort) {
+					uts=uts+"<br>Ort: " + ut.ort;
+				}
+				if (ut.kommentar) {
+					uts=uts+"<br>Kommentar: " + ut.kommentar;
+				}
+			}
+
 			/* Create popup with HTML code */
 			var p=d.tag + " " + d.datum + " " + d.zeit + "Uhr<br>"
-					+ timage + "<br>"
+					+ "<table><tr><td>" + timage + "</td><td>" + uts + "</td></tr></table><br>"
 					+ ort;
 
 			if (d.gt != 0) {
