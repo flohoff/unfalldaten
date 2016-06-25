@@ -9,9 +9,12 @@
 	<link type="text/css" rel="stylesheet" href="leaflet.css">
 	<link type="text/css" rel="stylesheet" href="MarkerCluster.css">
 	<link type="text/css" rel="stylesheet" href="MarkerCluster.Default.css">
+	<link type="text/css" rel="stylesheet" href="leaflet.awesome-markers.css">
+	<link type="text/css" rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
 
 	<script src="leaflet.js"></script>
 	<script src="leaflet.markercluster.js"></script>
+	<script src="leaflet.awesome-markers.min.js"></script>
 	<script src="leaflet.ajax.min.js"></script>
 	<script src="data.js"></script>
 	<style>
@@ -22,6 +25,26 @@
 <body>
 	<div id="mapid"</div>
 	<script>
+		var deadmarker = L.AwesomeMarkers.icon({
+					icon: 'close',
+					prefix: 'fa',
+					markerColor: 'red'
+		});
+
+		var redmarker = L.AwesomeMarkers.icon({
+					markerColor: 'red'
+		});
+
+		var bluemarker = L.AwesomeMarkers.icon({
+					markerColor: 'blue'
+		});
+
+		var orangemarker = L.AwesomeMarkers.icon({
+					markerColor: 'orange'
+		});
+
+
+
 		var map=L.map('mapid').setView([51.902578, 8.385411], 12);
 
 		L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -53,17 +76,42 @@
 			}
 			var type=typ + utyp;
 
-
 			var t="Title " + type;
 
+			var icon=bluemarker;
+			if (d.gt != 0) {
+				icon=deadmarker;
+			} else if (d.sv != 0) {
+				icon=redmarker;
+			} else if (d.lv != 0) {
+				icon=orangemarker;
+			}
+
 			var m=L.marker(new L.LatLng(data[i].geoy, data[i].geox),
-					{ title: t });
+					{ icon: icon, title: t });
 
 			/* Create unfalltype image link */
 			var timage="<img src=\"images/unka/" + type + ".png\">";
 
+			var ort=d.strasse1;
+			if (d.strasse2) {
+					ort=ort + " / " + d.strasse2;
+			}
+
 			/* Create popup with HTML code */
-			var p=d.tag + " " + d.datum + " " + d.zeit + "<br>" + timage;
+			var p=d.tag + " " + d.datum + " " + d.zeit + "Uhr<br>"
+					+ timage + "<br>"
+					+ ort;
+
+			if (d.gt != 0) {
+				p=p + "<br>" + d.gt + " Getötete(r)";
+			}
+			if (d.sv != 0) {
+				p=p + "<br>" + d.sv + " Schwerletzte(r)";
+			}
+			if (d.lv != 0) {
+				p=p + "<br>" + d.lv + " Leichtverletzte(r)";
+			}
 
 			m.bindPopup(p)
 
