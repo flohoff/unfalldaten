@@ -21,7 +21,7 @@ foreach my $fname (@ARGV) {
 	# div id="unka-detailboxright"
 	my $n=$tree->findvalue('/html/body//div[@id="unka-detailboxright"]');
 	my @a = split(/.rtlichkeit . Verkehrsvorgang:|Beschreibung:\s*|Kommentar:\s*|Stichpunkte|Kategorie/, $n);
-	my @r=map { s/^\s+//; s/\-{2,}//; $_;} @a;
+	my @r=map { s/^\s+//; s/\-{2,}//; s/^\s+$//; $_;} @a;
 
 	my $l;
 	if ($r[1] ne '') {
