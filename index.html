@@ -42,11 +42,31 @@
 		var markers = L.markerClusterGroup();
 
 		for(var i in data) {
-			var t="Title " + data[i].type;
-			var m=L.marker(new L.LatLng(data[i].lat, data[i].lon),
+			var d=data[i];
+
+			/* Create unfalltype */
+			var typ=d.typ;
+			var utyp=d.utyp;
+
+			if (utyp < 10) {
+					utyp="0" + utyp;
+			}
+			var type=typ + utyp;
+
+
+			var t="Title " + type;
+
+			var m=L.marker(new L.LatLng(data[i].geoy, data[i].geox),
 					{ title: t });
 
-			m.bindPopup(t)
+			/* Create unfalltype image link */
+			var timage="<img src=\"images/unka/" + type + ".png\">";
+
+			/* Create popup with HTML code */
+			var p=d.tag + " " + d.datum + " " + d.zeit + "<br>" + timage;
+
+			m.bindPopup(p)
+
 			markers.addLayer(m);
 		}
 	
