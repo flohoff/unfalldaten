@@ -10,7 +10,7 @@ use JSON;
 
 my $line=<STDIN>;
 chomp($line);
-my @head=map { $_=lc($_); s/ß/ss/; s/[^a-z0-9]//g; $_; } split(/,/, $line);
+my @head=map { $_=lc($_); s/^(\d+)(.*)/$2$1/; s/ß/ss/; s/[^a-z0-9]//g; $_; } split(/,/, $line);
 
 my @result;
 while(<STDIN>) {
@@ -27,4 +27,4 @@ while(<STDIN>) {
 	push @result, $l;
 }
 
-print to_json( \@result, { ascii => 0, pretty => 0 } );
+print "var data=" . to_json( \@result, { ascii => 0, pretty => 0 } );
