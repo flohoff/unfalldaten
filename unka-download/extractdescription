@@ -37,4 +37,8 @@ foreach my $fname (@ARGV) {
 	$result->{$num}=$l;
 }
 
+# Unfalltyp 799 - Ort ist falsch
+# Kein "plötzlicher Schaden am Fahrzeug"
+delete $result->{799}->{ort};
+
 print "var unfalltypen=" . to_json( $result, { ascii => 0, pretty => 0 } );
