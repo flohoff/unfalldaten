@@ -96,7 +96,7 @@
 			}
 
 			var m=L.marker(new L.LatLng(data[i].geoy, data[i].geox),
-					{ icon: icon, title: i });
+					{ icon: icon, title: d.datum + " " + d.zeit });
 
 			/* Create unfalltype image link */
 			var timage="<img src=\"images/unka/" + type + ".png\">";
