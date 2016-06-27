@@ -27,6 +27,20 @@
 <body>
 	<div id="mapid"</div>
 	<script>
+
+function verkehrsbeteiligter(v) {
+	/* Verursacher */
+	var vs="Sonstige";
+	if (v < 71) {
+		vs="KFZ";
+	} else if (v == 71 || v == 72) {
+		vs="Fahrrad";
+	} else if (v == 81) {
+		vs="Fußgänger";
+	}
+	return vs + " (" + v + ")";
+}
+
 		var deadmarker = L.AwesomeMarkers.icon({
 					icon: 'close',
 					prefix: 'fa',
@@ -135,18 +149,10 @@
 				p=p + "<br>" + d.lv + " Leichtverletzte(r)";
 			}
 
-			/* Verursacher */
-			var v=d.vb01;
-			var vs="Sonstige";
-			if (d.vb01 < 71) {
-				vs="KFZ";
-			} else if (v == 71 || v == 72) {
-				vs="Fahrrad";
-			} else if (v == 81) {
-				vs="Fußgänger";
+			p=p + "<br><br>Hauptverursacher: " + verkehrsbeteiligter(Number(d.vb01));
+			if (d.vb02) {
+				p=p + "<br>Beteiligter: " + verkehrsbeteiligter(Number(d.vb02));
 			}
-
-			p=p + "<br><br>Hauptverursacher: " + vs;
 
 			m.bindPopup(p)
 
