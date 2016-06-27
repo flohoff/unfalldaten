@@ -41,6 +41,22 @@ function verkehrsbeteiligter(v) {
 	}
 	return vs + " (" + v + ")";
 }
+function styleperspeed(feature) {
+	if (feature.properties.highway === 'living_street' ||
+		 	feature.properties.highway === 'pedestrian') {
+		return {color: "#008000"};
+	}
+
+	var maxspeed=Number(feature.properties.maxspeed);
+	if (maxspeed > 50) {
+		return {color: "#ff0000"};
+	} else if (maxspeed > 30) {
+		return {color: "#ffff00"};
+	} else if (maxspeed > 10) {
+		return {color: "#00ff00"};
+	}
+	return {};
+}
 
 		var deadmarker = L.AwesomeMarkers.icon({
 					icon: 'close',
@@ -85,6 +101,11 @@ function verkehrsbeteiligter(v) {
 					}
 				});
 		map.addLayer(boundary);
+
+		var maxspeed = L.geoJson.ajax("maxspeed.geojson",
+				{
+					style: styleperspeed
+				});
 
 		var cluster = L.markerClusterGroup();
 		var marker = L.layerGroup();
@@ -165,7 +186,17 @@ function verkehrsbeteiligter(v) {
 		}
 		map.addLayer(cluster);
 
-		L.control.layers({ "OpenStreetmap": colourlayer, "Greyscale": bwlayer}, { "Cluster": cluster, "Marker": marker, "Stadtgrenze": boundary }).addTo(map);
+		L.control.layers(
+					{
+							"OpenStreetmap": colourlayer,
+							"Greyscale": bwlayer
+					},
+					{
+							"Cluster": cluster,
+							"Marker": marker,
+							"Maxspeed": maxspeed,
+							"Stadtgrenze": boundary
+					}).addTo(map);
 
 	</script>
 </body>
