@@ -149,7 +149,7 @@ function verkehrsbeteiligter(v) {
 				p=p + "<br>" + d.lv + " Leichtverletzte(r)";
 			}
 
-			p=p + "<br><br>Hauptverursacher: " + verkehrsbeteiligter(Number(d.vb01));
+			p=p + "<br><br>Anzahl Beteiligte: " + d.bet + "<br>Hauptverursacher: " + verkehrsbeteiligter(Number(d.vb01));
 			if (d.vb02) {
 				p=p + "<br>Beteiligter: " + verkehrsbeteiligter(Number(d.vb02));
 			}
