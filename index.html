@@ -16,9 +16,10 @@
 	<script src="leaflet.markercluster.js"></script>
 	<script src="leaflet.awesome-markers.min.js"></script>
 	<script src="leaflet.ajax.min.js"></script>
-	<script src="data.js"></script>
 	<script src="unfalltypen.js"></script>
 	<script src="unfallursache.js"></script>
+
+	<script src="data/unfalldaten.json"></script>
 	<style>
 		body { padding: 0; margin 0; }
 		html, body, #mapid { height: 100%;, width: 100%; }
@@ -93,7 +94,7 @@ function styleperspeed(feature) {
 		});
 
 
-		var boundary = L.geoJson.ajax("boundary_guetersloh.geojson",
+		var boundary = L.geoJson.ajax("data/boundary.geojson",
 				{
 					style: {
 							"color": "#ff0080",
@@ -102,7 +103,7 @@ function styleperspeed(feature) {
 				});
 		map.addLayer(boundary);
 
-		var maxspeed = L.geoJson.ajax("maxspeed.geojson",
+		var maxspeed = L.geoJson.ajax("data/maxspeed.geojson",
 				{
 					style: styleperspeed
 				});
