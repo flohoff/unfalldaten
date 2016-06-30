@@ -20,6 +20,7 @@
 	<script src="unfallursache.js"></script>
 
 	<script src="data/unfalldaten.json"></script>
+	<script src="data/wheretozoom.js"></script>
 	<style>
 		body { padding: 0; margin 0; }
 		html, body, #mapid { height: 100%;, width: 100%; }
@@ -78,8 +79,10 @@ function styleperspeed(feature) {
 		});
 
 
+		var map=L.map('mapid');
 
-		var map=L.map('mapid').setView([51.902578, 8.385411], 12);
+		/* Region specific function from data subdir */
+		wheretozoom(map);
 
 		var colourlayer=L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 			maxZoom: 18,
