@@ -1,3 +1,2 @@
-function wheretozoom(map) {
-		map.setView([51.902578, 8.385411], 12);
-}
+ function wheretozoom(map) { map.setView([51.9173979740201,8.39304085435124], 12); }
+

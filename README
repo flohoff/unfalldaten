@@ -70,4 +70,18 @@ Um für eine Region die Unfalldaten zu visualisieren:
 
   Danach sollte in dem Verzeichnis eine maxspeed.geojson Datei liegen.
 
+- Danach aus dem boundary file automatisch extrahieren wohin die Karte beim ersten 
+  Laden "zoomen" soll d.h. an welcher position diese aufgehen soll
+
+  	bin/boundarytowheretozoom 2015-guetersloh
+
+  Danach sollte eine "wheretozoom.js" datei in dem Verzeichniss existieren - Diese ist
+  eine minimale javascript funktion:
+
+  Beispiel:
+
+ 	function wheretozoom(map) { map.setView([51.9173979740201,8.39304085435124], 12); }
+
+
+
 Florian Lohoff <f@zz.de>

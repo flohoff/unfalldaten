@@ -1,0 +1,35 @@
+#!/bin/sh
+
+DIR=$1
+
+if [ ! -f ${DIR}/boundary.geojson ]; then
+	echo Directory should contain a boundary.geojson file
+	exit 1
+fi
+
+psql osm <<EOF
+drop table boundary;
+WITH data AS (SELECT '
+`cat ${DIR}/boundary.geojson`
+'::json AS fc)
+
+SELECT
+  row_number() OVER () AS gid,
+  ST_SetSRID(ST_GeomFromGeoJSON(feat->>'geometry'),4326) AS geom,
+  feat->'properties' AS properties
+into temp table boundary
+FROM (
+	  SELECT json_array_elements(fc->'features') AS feat
+	  FROM data
+) AS f;
+
+\o ${DIR}/wheretozoom.js
+\t on
+select	'function wheretozoom(map) { map.setView([' || ST_Y(pos) || ',' || ST_X(pos) || '], 12); }'
+from	(
+	select	ST_AsText(ST_Centroid(b.geom)) pos
+	from	boundary b
+	limit	1
+	) foo;
+EOF
+
