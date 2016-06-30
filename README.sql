@@ -2,8 +2,27 @@ Um für einen Ort die Geometrieen der Straßen und ihre Geschwindigkeitsbeschrä
 zu bekommen ist eine postgres/postgis mit einem osm extrakt nötig der via "osm2pgsql" 
 importiert wird:
 
-	TODO - Beschreibung wie man die hinbekommt.
+Auf einem Debian Jessie (Evtl gehen auch aktuelle Ubuntu versionen)
 
+- Datenbank installieren und vorbereiten:
+
+	sudo apt-get install postgresql-9.4 postgis osm2pgsql
+	sudo --user=postgres createuser --superuser --no-createdb --no-createrole `whoami`
+	sudo --user=postgres createdb --encoding=UTF8 --owner=`whoami` osm
+	psql --dbname=osm --command="CREATE EXTENSION postgis"
+	psql --dbname=osm --command="CREATE EXTENSION hstore"
+
+- OSM Extrakt besorgen - hier - Regierungsbezirk Detmold:
+
+	wget http://download.geofabrik.de/europe/germany/nordrhein-westfalen/detmold-regbez-latest.osm.pbf
+
+- OSM Extrakt in die GIS Datenbank importieren:
+
+	osm2pgsql --hstore --create --latlong --slim \
+		--cache 2000 -d osm -U `whoami` detmold-regbez-latest.osm.pbf
+
+  Je nach Extraktgröße und Rechner dauert der import von wenigen Minuten bis zu Stunden/Tage.
+  Regierungsbezirk Detmold auf einem Lenovo T420 Notebook mit 8GByte Ram und SSD dauert 12 Minuten
 
 Um die geojson Boundary in die SQL Datenbank zu bekommen 
 
@@ -27,8 +46,17 @@ Um die geojson Boundary in die SQL Datenbank zu bekommen
 
 - Dann ausführen - Danach ist die geometrie in der tabelle t2
 
+	psql osm -f boundaryfilewithextension.sql
+
 - Dann alle straßen mit Geschwindigkeitsbeschränkungen exportieren:
 
+	psql osm
+
+	-- Output file setzen
+	\o outputfile
+	-- Output format - table "garnitur" abschalten
+	\t on
+	-- Statement auf die command line vom psql pasten
 	select	row_to_json(featurecollection)
 	from	(
 		select	'FeatureCollection' as type,
