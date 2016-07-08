@@ -60,6 +60,11 @@ function styleperspeed(feature) {
 	return {};
 }
 
+function addgeojsonpopup(feature, layer) {
+	if (feature.properties && feature.properties.popupContent) {
+		layer.bindPopup(feature.properties.popupContent);
+	}
+}
 		var deadmarker = L.AwesomeMarkers.icon({
 					icon: 'close',
 					prefix: 'fa',
@@ -96,7 +101,6 @@ function styleperspeed(feature) {
 			id: 'greyscale'
 		});
 
-
 		var boundary = L.geoJson.ajax("data/boundary.geojson",
 				{
 					style: {
@@ -105,6 +109,26 @@ function styleperspeed(feature) {
 					}
 				});
 		map.addLayer(boundary);
+
+		var kita = L.geoJson.ajax("data/kita.geojson",
+				{
+					onEachFeature: addgeojsonpopup,
+					style: {
+							"color": "#a03030",
+							"opacity": 0.3,
+							"fillOpacity": 0.3
+					}
+				});
+
+		var kitabuffer = L.geoJson.ajax("data/kitabuffer.geojson",
+				{
+					onEachFeature: addgeojsonpopup,
+					style: {
+							"color": "#a05030",
+							"opacity": 0.3,
+							"fillOpacity": 0.2
+					}
+				});
 
 		var maxspeed = L.geoJson.ajax("data/maxspeed.geojson",
 				{
@@ -199,7 +223,9 @@ function styleperspeed(feature) {
 							"Cluster": cluster,
 							"Marker": marker,
 							"Maxspeed": maxspeed,
-							"Stadtgrenze": boundary
+							"Stadtgrenze": boundary,
+							"Kitas und Schulen": kita,
+							"Kitas und Schulen 300m Buffer": kitabuffer
 					}).addTo(map);
 
 	</script>

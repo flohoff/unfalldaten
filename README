@@ -70,6 +70,12 @@ Um für eine Region die Unfalldaten zu visualisieren:
 
   Danach sollte in dem Verzeichnis eine maxspeed.geojson Datei liegen.
 
+- Dann mithilfe der Gemeindegrenze/Boundary die Kitas, Schulen und deren Buffer exportieren
+
+  	bin/boundarytokita 2015-guetersloh
+
+  Danach sollte in dem Verzeichnis eine kita.geojson und eine kitabuffer.geojson Datei liegen.
+
 - Danach aus dem boundary file automatisch extrahieren wohin die Karte beim ersten 
   Laden "zoomen" soll d.h. an welcher position diese aufgehen soll
 

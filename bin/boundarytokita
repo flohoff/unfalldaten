@@ -1,0 +1,76 @@
+#!/bin/sh
+
+DIR=$1
+
+if [ ! -f ${DIR}/boundary.geojson ]; then
+	echo Directory should contain a boundary.geojson file
+	exit 1
+fi
+
+psql osm <<EOF
+drop table boundary;
+WITH data AS (SELECT '
+`cat ${DIR}/boundary.geojson`
+'::json AS fc)
+
+SELECT
+  row_number() OVER () AS gid,
+  ST_SetSRID(ST_GeomFromGeoJSON(feat->>'geometry'),4326) AS geom,
+  feat->'properties' AS properties
+into temp table boundary
+FROM (
+	  SELECT json_array_elements(fc->'features') AS feat
+	  FROM data
+) AS f;
+
+\o ${DIR}/kita.geojson
+\t on
+select	row_to_json(featurecollection)
+from	(
+	select	'FeatureCollection' as type,
+		array_to_json(array_agg(features)) as features
+	from	(
+		 select	'Feature' as type,
+			ST_AsGeoJSON(way)::json as geometry,
+			json_build_object('name', name, 'type', amenity) as properties
+		from	(
+select  way,
+        name,
+	amenity,
+        tags    
+from    planet_osm_polygon r,
+        boundary b
+where   r.way && b.geom
+and     amenity in ( 'kindergarten', 'school' )
+and     ST_Intersects(r.way, b.geom) 
+
+			) ways
+		) features
+	) featurecollection;
+
+\o ${DIR}/kitabuffer.geojson
+\t on
+select	row_to_json(featurecollection)
+from	(
+	select	'FeatureCollection' as type,
+		array_to_json(array_agg(features)) as features
+	from	(
+		 select	'Feature' as type,
+			ST_AsGeoJSON(way)::json as geometry,
+			json_build_object('popupContent', name, 'type', amenity) as properties
+		from	(
+select  ST_Transform(ST_Buffer(ST_Transform(ST_Centroid(way),31466),300),4326) way,
+        name,
+	amenity,
+        tags    
+from    planet_osm_polygon r,
+        boundary b
+where   r.way && b.geom
+and     amenity in ( 'kindergarten', 'school' )
+and     ST_Intersects(r.way, b.geom) 
+
+			) ways
+		) features
+	) featurecollection;
+EOF
+
