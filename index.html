@@ -101,6 +101,8 @@ function addgeojsonpopup(feature, layer) {
 			id: 'greyscale'
 		});
 
+		L.control.scale({ imperial: false }).addTo(map);
+
 		var boundary = L.geoJson.ajax("data/boundary.geojson",
 				{
 					style: {
