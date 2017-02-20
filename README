@@ -27,7 +27,7 @@ Um für eine Region die Unfalldaten zu visualisieren:
 
   Wenn man das "var data=" am Anfang Löscht kann man sich das mit "json_pp" (Pretty Print) ansehen:
 
-	sed -e 's/var data=//' <data.js | json_pp | less	
+	sed -e 's/var data=//' <unfalldaten.json | json_pp | less	
 
 - Die Gemeindegrenze besorgen von
 
@@ -45,9 +45,9 @@ Um für eine Region die Unfalldaten zu visualisieren:
   Installation der Notwendigen Pakete (Debian Jessie evtl geht auch Ubuntu). Der User muss
   sudo recht haben:
 
-	sudo apt-get install postgresql-9.4 postgis osm2pgsql
+	sudo apt-get install postgresql-9.4 postgis osm2pgsql postgresql-contrib-9.4 postgresql-9.4-postgis-2.1
 	sudo --user=postgres createuser --superuser --no-createdb --no-createrole `whoami`
-	sudo --user=postgres createdb --encoding=UTF8 --owner=`whoami` osm
+	sudo --user=postgres createdb --encoding='utf-8' --locale=en_US.utf8 --owner=`whoami` osm
 	psql --dbname=osm --command="CREATE EXTENSION postgis"
 	psql --dbname=osm --command="CREATE EXTENSION hstore"
 
