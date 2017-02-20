@@ -8,7 +8,7 @@ if [ ! -f ${DIR}/boundary.geojson ]; then
 fi
 
 psql osm <<EOF
-drop table boundary;
+drop table if exists boundary;
 WITH data AS (SELECT '
 `cat ${DIR}/boundary.geojson`
 '::json AS fc)
