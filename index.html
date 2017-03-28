@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Unfallstatistik 2015</title>
+	<title>Loading data ...</title>
 	<meta charset="utf-8" />
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,6 +21,7 @@
 
 	<script src="data/unfalldaten.json"></script>
 	<script src="data/wheretozoom.js"></script>
+	<script src="data/settitle.js"></script>
 	<style>
 		body { padding: 0; margin 0; }
 		html, body, #mapid { height: 100%;, width: 100%; }
@@ -88,6 +89,7 @@ function addgeojsonpopup(feature, layer) {
 
 		/* Region specific function from data subdir */
 		wheretozoom(map);
+		settitle(map);
 
 		var colourlayer=L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 			maxZoom: 18,
