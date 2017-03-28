@@ -50,7 +50,7 @@ Um für eine Region die Unfalldaten zu visualisieren:
 
 	sudo apt-get install postgresql-9.4 postgis osm2pgsql postgresql-contrib-9.4 postgresql-9.4-postgis-2.1
 	sudo --user=postgres createuser --superuser --no-createdb --no-createrole `whoami`
-	sudo --user=postgres createdb --encoding='utf-8' --locale=en_US.utf8 --owner=`whoami` osm
+	sudo --user=postgres createdb --encoding='utf-8' --locale=en_US.UTF-8 --owner=`whoami` osm
 	psql --dbname=osm --command="CREATE EXTENSION postgis"
 	psql --dbname=osm --command="CREATE EXTENSION hstore"
 
