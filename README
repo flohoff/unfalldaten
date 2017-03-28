@@ -16,6 +16,9 @@ Um für eine Region die Unfalldaten zu visualisieren:
 	Kommune,Tag,Datum,Zeit,1. Straße,2. Straße,Nr.,StrG,Str.-Nr.,AbsX,Abs.X,Km,Meter,GEO_X,GEO_Y,KAT,TYP,UTYP,BET,GT,SV,LV,ALC,VU-F,Bet_01,Folg_01,VB_01,U1_01,U2_01,BT_ALT01,BT_M/W01,Bet_02,Folg_02,VB_02,U1_02,U2_02,BT_ALT02,BT_M/W02,Bet_03,Folg_03,VB_03,U1_03,U2_03,BT_ALT03,BT_M/W03,Bet_04,Folg_04,VB_04,U1_04,U2_04,BT_ALT04,BT_M/W04,Bet_05,Folg_05,VB_05,U1_05,U2_05,BT_ALT05,BT_M/W05,Bet_06,Folg_06,VB_06,U1_06,U2_06,BT_ALT06,BT_M/W06,Bet_07,Folg_07,VB_07,U1_07,U2_07,BT_ALT07,BT_M/W07,Bet_08,Folg_08,VB_08,U1_08,U2_08,BT_ALT08,BT_M/W08,Bet_09,Folg_09,VB_09,U1_09,U2_09,BT_ALT09,BT_M/W09,Bet_10,Folg_10,VB_10,U1_10,U2_10,BT_ALT10,BT_M/W10,Bet_11,Folg_11,VB_11,U1_11,U2_11,BT_ALT11,BT_M/W11,Bet_12,Folg_12,VB_12,U1_12,U2_12,BT_ALT12,BT_M/W12,Bet_13,Folg_13,VB_13,U1_13,U2_13,BT_ALT13,BT_M/W13,Bet_14,Folg_14,VB_14,U1_14,U2_14,BT_ALT14,BT_M/W14,Bet_15,Folg_15,VB_15,U1_15,U2_15,BT_ALT15,BT_M/W15,Bet_16,Folg_16,VB_16,U1_16,U2_16,BT_ALT16,BT_M/W16,Bet_17,Folg_17,VB_17,U1_17,U2_17,BT_ALT17,BT_M/W17,Bet_18,Folg_18,VB_18,U1_18,U2_18,BT_ALT18,BT_M/W18,Bet_19,Folg_19,VB_19,U1_19,U2_19,BT_ALT19,BT_M/W19
 	Gütersloh,Fr,02.01.2015,15:55,Saturnweg,,3,G,,,,,,8.36772,51.8938,5,7,99,2,0,0,0,0,1,1,0,71,49,,,0,2,0,21,,,,0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
+  Wichtig ist das die GeoX und GeoY zeilen keine "," sondern "." enthalten. Ggfs. muss die Spalte
+  erst auf Text Format gesetzt werden und dann durch Suchen/Ersetzen alle "," gegen "." getauscht werden.
+
 - Die CSV Datei in eine "json" datei wandeln:
 
   bin/convertojson \
