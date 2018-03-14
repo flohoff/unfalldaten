@@ -32,6 +32,16 @@
 	<div id="mapid"</div>
 	<script>
 
+function fahrradbeteiligt(d) {
+	var v=Number(d.vb01);
+	if (v == 71 || v == 72)
+		return true;
+	v=Number(d.vb02);
+	if (v == 71 || v == 72)
+		return true;
+	return false;
+}
+
 function verkehrsbeteiligter(v) {
 	/* Verursacher */
 	var vs="Sonstige";
@@ -66,24 +76,22 @@ function addgeojsonpopup(feature, layer) {
 		layer.bindPopup(feature.properties.popupContent);
 	}
 }
-		var deadmarker = L.AwesomeMarkers.icon({
-					icon: 'close',
-					prefix: 'fa',
-					markerColor: 'red'
-		});
+		//L.AwesomeMarkers.Icon.prototype.options.prefix = 'fa';
 
-		var redmarker = L.AwesomeMarkers.icon({
-					markerColor: 'red'
-		});
-
-		var bluemarker = L.AwesomeMarkers.icon({
-					markerColor: 'blue'
-		});
-
-		var orangemarker = L.AwesomeMarkers.icon({
-					markerColor: 'orange'
-		});
-
+		var markericons = {
+			normal: {
+				green: L.AwesomeMarkers.icon({ markerColor: 'green' }),
+				red: L.AwesomeMarkers.icon({ markerColor: 'red' }),
+				orange: L.AwesomeMarkers.icon({ markerColor: 'orange' }),
+				blue: L.AwesomeMarkers.icon({ markerColor: 'blue' })
+			},
+			bike: {
+				green: L.AwesomeMarkers.icon({ markerColor: 'green', prefix: 'fa', icon: 'bicycle' }),
+				red: L.AwesomeMarkers.icon({ markerColor: 'red', prefix: 'fa', icon: 'bicycle' }),
+				orange: L.AwesomeMarkers.icon({ markerColor: 'orange', prefix: 'fa', icon: 'bicycle' }),
+				blue: L.AwesomeMarkers.icon({ markerColor: 'blue', prefix: 'fa', icon: 'bicycle' }),
+			}
+		};
 
 		var map=L.map('mapid');
 
@@ -159,17 +167,22 @@ function addgeojsonpopup(feature, layer) {
 				type=utyp
 			}
 
-			var icon=bluemarker;
+			var icon="green";
 			if (d.gt != 0) {
-				icon=deadmarker;
+				icon="red";
 			} else if (d.sv != 0) {
-				icon=redmarker;
+				icon="orange";
 			} else if (d.lv != 0) {
-				icon=orangemarker;
+				icon="blue";
+			}
+
+			var icontype="normal";
+			if (fahrradbeteiligt(d)) {
+				icontype="bike";
 			}
 
 			var m=L.marker(new L.LatLng(data[i].geoy, data[i].geox),
-					{ icon: icon, title: d.datum + " " + d.zeit });
+					{ icon: markericons[icontype][icon], title: d.datum + " " + d.zeit });
 
 			/* Create unfalltype image link */
 			var timage="<img src=\"images/unka/" + utyp + ".png\">";
