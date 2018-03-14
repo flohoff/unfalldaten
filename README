@@ -45,10 +45,10 @@ Um für eine Region die Unfalldaten zu visualisieren:
   in einer Postgres/Postgis Datenbank - Das muss nicht auf dem Webserver sein sondern 
   kann auf einem Notebook eben prozessiert werden.
 
-  Installation der Notwendigen Pakete (Debian Jessie evtl geht auch Ubuntu). Der User muss
+  Installation der Notwendigen Pakete (Debian Stretch evtl geht auch Ubuntu). Der User muss
   sudo recht haben:
 
-	sudo apt-get install postgresql-9.4 postgis osm2pgsql postgresql-contrib-9.4 postgresql-9.4-postgis-2.1
+	sudo apt-get install postgresql-9.6 postgis osm2pgsql postgresql-contrib-9.6 postgresql-9.6-postgis-2.3
 	sudo --user=postgres createuser --superuser --no-createdb --no-createrole `whoami`
 	sudo --user=postgres createdb --encoding='utf-8' --locale=en_US.UTF-8 --owner=`whoami` osm
 	psql --dbname=osm --command="CREATE EXTENSION postgis"
@@ -65,7 +65,10 @@ Um für eine Region die Unfalldaten zu visualisieren:
 		--cache 2000 -d osm -U `whoami` detmold-regbez-latest.osm.pbf
 
   Je nach Extraktgröße und Rechner dauert der import von wenigen Minuten bis zu Stunden/Tage.
-  Regierungsbezirk Detmold auf einem Lenovo T420 Notebook mit 8GByte Ram und SSD dauert 12 Minuten
+  Regierungsbezirk Detmold aufA
+
+  	- Lenovo T420 mit 8GByte Ram und SSD dauert 12 Minuten
+	- Lenovo T440s mit 12GByte Ram und SSD dauert 212 Sekunden
 
 - Dann mithilfe der Gemeindegrenze/Boundary die maxspeeds exportieren
 
