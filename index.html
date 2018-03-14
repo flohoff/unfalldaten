@@ -152,7 +152,12 @@ function addgeojsonpopup(feature, layer) {
 			if (utyp < 10) {
 					utyp="0" + utyp;
 			}
+
+			// 2017 has utyp containing the full unka
 			var type=typ + utyp;
+			if (utyp > 100) {
+				type=utyp
+			}
 
 			var icon=bluemarker;
 			if (d.gt != 0) {
@@ -167,7 +172,7 @@ function addgeojsonpopup(feature, layer) {
 					{ icon: icon, title: d.datum + " " + d.zeit });
 
 			/* Create unfalltype image link */
-			var timage="<img src=\"images/unka/" + type + ".png\">";
+			var timage="<img src=\"images/unka/" + utyp + ".png\">";
 
 			var ort=d.strasse1;
 			if (d.strasse2) {
