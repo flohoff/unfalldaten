@@ -34,7 +34,7 @@ Um für eine Region die Unfalldaten zu visualisieren:
 
 - Die Gemeindegrenze besorgen von
 
-  https://osm.wno-edv-service.de/boundaries/
+  https://wambachers-osm.website/boundaries/
 
   Dafür ist ein OpenStreetMap Account notwendig. Man bekommt dann ein ZIP file in dem ein
   oder mehrere geojson files liegen.
