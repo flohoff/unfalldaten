@@ -187,6 +187,11 @@ function addgeojsonpopup(feature, layer) {
 			/* Create unfalltype image link */
 			var timage="<img src=\"images/unka/" + utyp + ".png\">";
 
+			/* Older data contain only short utyp (2 digit) */
+			if (utyp.length == 2) {
+				var timage="<img src=\"images/unka/" + typ + utyp + ".png\">";
+			}
+
 			var ort=d.strasse1;
 			if (d.strasse2) {
 					ort=ort + " / " + d.strasse2;
