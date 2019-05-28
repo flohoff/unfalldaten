@@ -2,98 +2,121 @@
 Um für eine Region die Unfalldaten zu visualisieren:
 
 - Einen neuen Ordner erzeugen
-	
-	mkdir 2015-guetersloh
 
-- Die XLS/xlsx/odt Datei der Unfalldaten in Libreoffice öffnen und als CSV speichern
-  in den Ordner z.b. als "unfalldaten.csv"
+      
+      mkdir 2015-guetersloh
+      
 
-  Hier ist die Reihenfolge der Spalten irrelevant - Lediglich die Titel der
-  Spalten die benutzt werden müssen existieren.
+Unfalldaten vom XLS in eine JSON wandeln
+----------------------------------------
 
-  Beispiel:
+Die XLS/xlsx/odt Datei der Unfalldaten in Libreoffice öffnen und als CSV speichern
+in den Ordner z.b. als "unfalldaten.csv"
+Hier ist die Reihenfolge der Spalten irrelevant - Lediglich die Titel der
+Spalten die benutzt werden müssen existieren.
 
-	Kommune,Tag,Datum,Zeit,1. Straße,2. Straße,Nr.,StrG,Str.-Nr.,AbsX,Abs.X,Km,Meter,GEO_X,GEO_Y,KAT,TYP,UTYP,BET,GT,SV,LV,ALC,VU-F,Bet_01,Folg_01,VB_01,U1_01,U2_01,BT_ALT01,BT_M/W01,Bet_02,Folg_02,VB_02,U1_02,U2_02,BT_ALT02,BT_M/W02,Bet_03,Folg_03,VB_03,U1_03,U2_03,BT_ALT03,BT_M/W03,Bet_04,Folg_04,VB_04,U1_04,U2_04,BT_ALT04,BT_M/W04,Bet_05,Folg_05,VB_05,U1_05,U2_05,BT_ALT05,BT_M/W05,Bet_06,Folg_06,VB_06,U1_06,U2_06,BT_ALT06,BT_M/W06,Bet_07,Folg_07,VB_07,U1_07,U2_07,BT_ALT07,BT_M/W07,Bet_08,Folg_08,VB_08,U1_08,U2_08,BT_ALT08,BT_M/W08,Bet_09,Folg_09,VB_09,U1_09,U2_09,BT_ALT09,BT_M/W09,Bet_10,Folg_10,VB_10,U1_10,U2_10,BT_ALT10,BT_M/W10,Bet_11,Folg_11,VB_11,U1_11,U2_11,BT_ALT11,BT_M/W11,Bet_12,Folg_12,VB_12,U1_12,U2_12,BT_ALT12,BT_M/W12,Bet_13,Folg_13,VB_13,U1_13,U2_13,BT_ALT13,BT_M/W13,Bet_14,Folg_14,VB_14,U1_14,U2_14,BT_ALT14,BT_M/W14,Bet_15,Folg_15,VB_15,U1_15,U2_15,BT_ALT15,BT_M/W15,Bet_16,Folg_16,VB_16,U1_16,U2_16,BT_ALT16,BT_M/W16,Bet_17,Folg_17,VB_17,U1_17,U2_17,BT_ALT17,BT_M/W17,Bet_18,Folg_18,VB_18,U1_18,U2_18,BT_ALT18,BT_M/W18,Bet_19,Folg_19,VB_19,U1_19,U2_19,BT_ALT19,BT_M/W19
-	Gütersloh,Fr,02.01.2015,15:55,Saturnweg,,3,G,,,,,,8.36772,51.8938,5,7,99,2,0,0,0,0,1,1,0,71,49,,,0,2,0,21,,,,0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Beispiel:
 
-  Wichtig ist das die GeoX und GeoY zeilen keine "," sondern "." enthalten. Ggfs. muss die Spalte
-  erst auf Text Format gesetzt werden und dann durch Suchen/Ersetzen alle "," gegen "." getauscht werden.
-
-- Die CSV Datei in eine "json" datei wandeln:
-
-  bin/convertojson \
-  	<2015-guetersloh/2015_Stadt_GT_VU_Rad.csv \
-	>2015-guetersloh/unfalldaten.json
-
-  Beispiel:
-	var data=[{"u201":"","nr":"3","strasse2":"","geoy":"51.8938","gt":"0","u202":"","btalt01":"","alc":"0","geox":"8.36772 .... 
-
-  Wenn man das "var data=" am Anfang Löscht kann man sich das mit "json_pp" (Pretty Print) ansehen:
-
-	sed -e 's/var data=//' <unfalldaten.json | json_pp | less	
-
-- Die Gemeindegrenze besorgen von
-
-  https://wambachers-osm.website/boundaries/
-
-  Dafür ist ein OpenStreetMap Account notwendig. Man bekommt dann ein ZIP file in dem ein
-  oder mehrere geojson files liegen.
-
-  Das entsprechende geojson file (Nicht das ZIP) in den Datenorder als boundary.geojson legen
-
-- Für den export der Geschwindigkeitsbeschränkungen braucht man einen OSM Export 
-  in einer Postgres/Postgis Datenbank - Das muss nicht auf dem Webserver sein sondern 
-  kann auf einem Notebook eben prozessiert werden.
-
-  Installation der Notwendigen Pakete (Debian Stretch evtl geht auch Ubuntu). Der User muss
-  sudo recht haben:
-
-	sudo apt-get install postgresql-9.6 postgis osm2pgsql postgresql-contrib-9.6 postgresql-9.6-postgis-2.3
-	sudo --user=postgres createuser --superuser --no-createdb --no-createrole `whoami`
-	sudo --user=postgres createdb --encoding='utf-8' --locale=en_US.UTF-8 --owner=`whoami` osm
-	psql --dbname=osm --command="CREATE EXTENSION postgis"
-	psql --dbname=osm --command="CREATE EXTENSION hstore"
-
-- OSM Extrakt besorgen - hier - Regierungsbezirk Detmold - Je kleiner der Extrakt
-  desto schneller geht der Export. 
-
-	wget http://download.geofabrik.de/europe/germany/nordrhein-westfalen/detmold-regbez-latest.osm.pbf
-
-- OSM Extrakt in die GIS Datenbank importieren:
-
-	osm2pgsql --hstore --create --latlong --slim \
-		--cache 2000 -d osm -U `whoami` detmold-regbez-latest.osm.pbf
-
-  Je nach Extraktgröße und Rechner dauert der import von wenigen Minuten bis zu Stunden/Tage.
-  Regierungsbezirk Detmold aufA
-
-  	- Lenovo T420 mit 8GByte Ram und SSD dauert 12 Minuten
-	- Lenovo T440s mit 12GByte Ram und SSD dauert 212 Sekunden
-
-- Dann mithilfe der Gemeindegrenze/Boundary die maxspeeds exportieren
-
-  	bin/boundarytomaxspeed 2015-guetersloh
-
-  Danach sollte in dem Verzeichnis eine maxspeed.geojson Datei liegen.
-
-- Dann mithilfe der Gemeindegrenze/Boundary die Kitas, Schulen und deren Buffer exportieren
-
-  	bin/boundarytokita 2015-guetersloh
-
-  Danach sollte in dem Verzeichnis eine kita.geojson und eine kitabuffer.geojson Datei liegen.
-
-- Danach aus dem boundary file automatisch extrahieren wohin die Karte beim ersten 
-  Laden "zoomen" soll d.h. an welcher position diese aufgehen soll
-
-  	bin/boundarytowheretozoom 2015-guetersloh
-
-  Danach sollte eine "wheretozoom.js" datei in dem Verzeichniss existieren - Diese ist
-  eine minimale javascript funktion:
-
-  Beispiel:
-
- 	function wheretozoom(map) { map.setView([51.9173979740201,8.39304085435124], 12); }
+      Kommune,Tag,Datum,Zeit,1. Straße,2. Straße,Nr.,StrG,Str.-Nr.,AbsX,Abs.X,Km,Meter,GEO_X,GEO_Y,KAT,TYP,UTYP,BET,GT,SV,LV,ALC,VU-F,Bet_01,Folg_01,VB_01,U1_01,U2_01,BT_ALT01,BT_M/W01,Bet_02,Folg_02,VB_02,U1_02,U2_02,BT_ALT02,BT_M/W02,Bet_03,Folg_03,VB_03,U1_03,U2_03,BT_ALT03,BT_M/W03,Bet_04,Folg_04,VB_04,U1_04,U2_04,BT_ALT04,BT_M/W04,Bet_05,Folg_05,VB_05,U1_05,U2_05,BT_ALT05,BT_M/W05,Bet_06,Folg_06,VB_06,U1_06,U2_06,BT_ALT06,BT_M/W06,Bet_07,Folg_07,VB_07,U1_07,U2_07,BT_ALT07,BT_M/W07,Bet_08,Folg_08,VB_08,U1_08,U2_08,BT_ALT08,BT_M/W08,Bet_09,Folg_09,VB_09,U1_09,U2_09,BT_ALT09,BT_M/W09,Bet_10,Folg_10,VB_10,U1_10,U2_10,BT_ALT10,BT_M/W10,Bet_11,Folg_11,VB_11,U1_11,U2_11,BT_ALT11,BT_M/W11,Bet_12,Folg_12,VB_12,U1_12,U2_12,BT_ALT12,BT_M/W12,Bet_13,Folg_13,VB_13,U1_13,U2_13,BT_ALT13,BT_M/W13,Bet_14,Folg_14,VB_14,U1_14,U2_14,BT_ALT14,BT_M/W14,Bet_15,Folg_15,VB_15,U1_15,U2_15,BT_ALT15,BT_M/W15,Bet_16,Folg_16,VB_16,U1_16,U2_16,BT_ALT16,BT_M/W16,Bet_17,Folg_17,VB_17,U1_17,U2_17,BT_ALT17,BT_M/W17,Bet_18,Folg_18,VB_18,U1_18,U2_18,BT_ALT18,BT_M/W18,Bet_19,Folg_19,VB_19,U1_19,U2_19,BT_ALT19,BT_M/W19
+      Gütersloh,Fr,02.01.2015,15:55,Saturnweg,,3,G,,,,,,8.36772,51.8938,5,7,99,2,0,0,0,0,1,1,0,71,49,,,0,2,0,21,,,,0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
 
+Wichtig ist das die GeoX und GeoY zeilen keine "," sondern "." enthalten. Ggfs. muss die Spalte
+erst auf Text Format gesetzt werden und dann durch Suchen/Ersetzen alle "," gegen "." getauscht werden.
+
+Die CSV Datei anschliessend in eine "json" datei wandeln:
+  
+      bin/convertojson \
+          <2015-guetersloh/2015_Stadt_GT_VU_Rad.csv \
+          >2015-guetersloh/unfalldaten.json
+
+Beispiel:
+
+      var data=[{"u201":"","nr":"3","strasse2":"","geoy":"51.8938","gt":"0","u202":"","btalt01":"","alc":"0","geox":"8.36772 .... 
+
+Wenn man das "var data=" am Anfang Löscht kann man sich das mit "json_pp" (Pretty Print) ansehen:
+
+      sed -e 's/var data=//' <unfalldaten.json | json_pp | less
+
+
+Geodaten aus OSM
+================
+
+Gemeindegrenzen
+---------------
+
+Die Gemeindegrenze besorgen von
+
+https://wambachers-osm.website/boundaries/
+
+Dafür ist ein OpenStreetMap Account notwendig. Man bekommt dann ein ZIP file in dem ein
+oder mehrere geojson files liegen.
+
+Das entsprechende geojson file (Nicht das ZIP) in den Datenorder als boundary.geojson legen
+
+
+Import von OSM Daten
+--------------------
+
+Für den export der Geschwindigkeitsbeschränkungen braucht man einen OSM Export 
+in einer Postgres/Postgis Datenbank - Das muss nicht auf dem Webserver sein sondern 
+kann auf einem Notebook eben prozessiert werden.
+
+Installation der Notwendigen Pakete (Debian Stretch evtl geht auch Ubuntu). Der User muss
+sudo recht haben:
+
+      sudo apt-get install postgresql-9.6 postgis osm2pgsql postgresql-contrib-9.6 postgresql-9.6-postgis-2.3
+      sudo --user=postgres createuser --superuser --no-createdb --no-createrole `whoami`
+      sudo --user=postgres createdb --encoding='utf-8' --locale=en_US.UTF-8 --owner=`whoami` osm
+      psql --dbname=osm --command="CREATE EXTENSION postgis"
+      psql --dbname=osm --command="CREATE EXTENSION hstore"
+
+OSM Extrakt besorgen - hier - Regierungsbezirk Detmold - Je kleiner der Extrakt
+desto schneller geht der Export. 
+
+      wget http://download.geofabrik.de/europe/germany/nordrhein-westfalen/detmold-regbez-latest.osm.pbf
+
+OSM Extrakt in die GIS Datenbank importieren:
+
+      osm2pgsql --hstore --create --latlong --slim
+        --cache 2000 -d osm -U `whoami` detmold-regbez-latest.osm.pbf
+
+Je nach Extraktgröße und Rechner dauert der import von wenigen Minuten bis zu Stunden/Tage.
+Regierungsbezirk Detmold aufA
+
+  * Lenovo T420 mit 8GByte Ram und SSD dauert 12 Minuten
+  * Lenovo T440s mit 12GByte Ram und SSD dauert 212 Sekunden
+
+Geschwindigkeitsbeschränkungen
+------------------------------
+
+Nach dem import mithilfe der Gemeindegrenze/Boundary die maxspeeds exportieren
+
+      bin/boundarytomaxspeed 2015-guetersloh
+
+Danach sollte in dem Verzeichnis eine maxspeed.geojson Datei liegen.
+
+Kitas und Schulen
+-----------------
+
+Dann mithilfe der Gemeindegrenze/Boundary die Kitas, Schulen und deren Buffer exportieren
+
+      bin/boundarytokita 2015-guetersloh
+
+Danach sollte in dem Verzeichnis eine kita.geojson und eine kitabuffer.geojson Datei liegen.
+
+Zoomfile
+--------
+Danach aus dem boundary file automatisch extrahieren wohin die Karte beim ersten 
+Laden "zoomen" soll d.h. an welcher position diese aufgehen soll
+
+      bin/boundarytowheretozoom 2015-guetersloh
+
+Danach sollte eine "wheretozoom.js" datei in dem Verzeichniss existieren - Diese ist
+eine minimale javascript funktion:
+
+Beispiel:
+
+      function wheretozoom(map) { map.setView([51.9173979740201,8.39304085435124], 12); }
 
 Florian Lohoff <f@zz.de>
